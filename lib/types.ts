@@ -23,7 +23,31 @@ export type AttackType =
   | 'Packet Sniffing'
   | 'Session Hijacking'
   | 'Email Spoofing'
-  | 'APT Attack';
+  | 'APT Attack'
+  | 'Buffer Overflow'
+  | 'Cross-Site Scripting'
+  | 'CSRF Attack'
+  | 'XML Injection'
+  | 'LDAP Injection'
+  | 'Command Injection'
+  | 'Path Traversal'
+  | 'Remote Code Execution'
+  | 'File Inclusion'
+  | 'Logic Bomb'
+  | 'Backdoor'
+  | 'Spyware'
+  | 'Adware'
+  | 'Keylogger'
+  | 'Exploit Kit'
+  | 'Supply Chain Attack'
+  | 'Insider Threat'
+  | 'Watering Hole'
+  | 'Drive-by Download'
+  | 'Cookie Theft'
+  | 'Typosquatting'
+  | 'Domain Hijacking'
+  | 'BGP Hijacking'
+  | 'Sybil Attack';
 
 export interface AttackEvent {
   id: string;
@@ -68,6 +92,30 @@ export const ATTACK_TYPES: AttackType[] = [
   'Session Hijacking',
   'Email Spoofing',
   'APT Attack',
+  'Buffer Overflow',
+  'Cross-Site Scripting',
+  'CSRF Attack',
+  'XML Injection',
+  'LDAP Injection',
+  'Command Injection',
+  'Path Traversal',
+  'Remote Code Execution',
+  'File Inclusion',
+  'Logic Bomb',
+  'Backdoor',
+  'Spyware',
+  'Adware',
+  'Keylogger',
+  'Exploit Kit',
+  'Supply Chain Attack',
+  'Insider Threat',
+  'Watering Hole',
+  'Drive-by Download',
+  'Cookie Theft',
+  'Typosquatting',
+  'Domain Hijacking',
+  'BGP Hijacking',
+  'Sybil Attack',
 ];
 
 /**
@@ -75,7 +123,7 @@ export const ATTACK_TYPES: AttackType[] = [
  * Warna akan berubah sesuai jenis dan tingkat serangan
  */
 export const ATTACK_COLORS: Record<AttackType, Record<1 | 2 | 3 | 4 | 5, string>> = {
-  // Standard types
+  // Original types
   'Web Attackers': {
     1: '#FFD700', // Low: Gold
     2: '#FFA500', // Medium: Orange
@@ -174,6 +222,7 @@ export const ATTACK_COLORS: Record<AttackType, Record<1 | 2 | 3 | 4 | 5, string>
     4: '#FFA500', // Critical: Orange
     5: '#FF4500', // Catastrophic: Orange Red
   },
+  // New attack types (10+)
   'API Abuse': {
     1: '#B0C4DE', // Low: Light Steel Blue
     2: '#5F9EA0', // Medium: Cadet Blue
@@ -250,6 +299,175 @@ export const ATTACK_COLORS: Record<AttackType, Record<1 | 2 | 3 | 4 | 5, string>
     3: '#78909C', // High: Dark Grey
     4: '#455A64', // Critical: Darker Grey
     5: '#37474F', // Catastrophic: Very Dark Grey
+  },
+  // Additional attack types (36+)
+  'Buffer Overflow': {
+    1: '#F8BBD0', // Low: Light Pink
+    2: '#F48FB1', // Medium: Pink
+    3: '#F06292', // High: Deep Pink
+    4: '#EC407A', // Critical: Darker Pink
+    5: '#C2185B', // Catastrophic: Very Deep Pink
+  },
+  'Cross-Site Scripting': {
+    1: '#BBDEFB', // Low: Light Blue
+    2: '#90CAF9', // Medium: Blue
+    3: '#64B5F6', // High: Deep Blue
+    4: '#42A5F5', // Critical: Darker Blue
+    5: '#1976D2', // Catastrophic: Very Deep Blue
+  },
+  'CSRF Attack': {
+    1: '#C5E1A5', // Low: Light Lime
+    2: '#AED581', // Medium: Lime
+    3: '#9CCC65', // High: Deep Lime
+    4: '#7CB342', // Critical: Darker Lime
+    5: '#558B2F', // Catastrophic: Very Deep Lime
+  },
+  'XML Injection': {
+    1: '#FFCCBC', // Low: Light Deep Orange
+    2: '#FFAB91', // Medium: Deep Orange
+    3: '#FF8A65', // High: Orange
+    4: '#FF7043', // Critical: Darker Orange
+    5: '#D84315', // Catastrophic: Very Deep Orange
+  },
+  'LDAP Injection': {
+    1: '#B2DFDB', // Low: Light Teal
+    2: '#80CBC4', // Medium: Teal
+    3: '#4DB6AC', // High: Deep Teal
+    4: '#26A69A', // Critical: Darker Teal
+    5: '#00796B', // Catastrophic: Very Deep Teal
+  },
+  'Command Injection': {
+    1: '#D1C4E9', // Low: Light Indigo
+    2: '#B39DDB', // Medium: Indigo
+    3: '#9575CD', // High: Deep Indigo
+    4: '#7986CB', // Critical: Darker Indigo
+    5: '#3F51B5', // Catastrophic: Very Deep Indigo
+  },
+  'Path Traversal': {
+    1: '#FCE4EC', // Low: Light Pink
+    2: '#F8BBD0', // Medium: Pink
+    3: '#F48FB1', // High: Deep Pink
+    4: '#F06292', // Critical: Darker Pink
+    5: '#C2185B', // Catastrophic: Very Deep Pink
+  },
+  'Remote Code Execution': {
+    1: '#FFE0B2', // Low: Light Orange
+    2: '#FFCC80', // Medium: Orange
+    3: '#FFB74D', // High: Deep Orange
+    4: '#FFA726', // Critical: Darker Orange
+    5: '#F57C00', // Catastrophic: Very Deep Orange
+  },
+  'File Inclusion': {
+    1: '#F0F4C3', // Low: Light Yellow
+    2: '#E6EE9C', // Medium: Yellow
+    3: '#DCE775', // High: Deep Yellow
+    4: '#D4E157', // Critical: Darker Yellow
+    5: '#AFB42B', // Catastrophic: Very Deep Yellow
+  },
+  'Logic Bomb': {
+    1: '#F3E5F5', // Low: Light Purple
+    2: '#E1BEE7', // Medium: Purple
+    3: '#CE93D8', // High: Deep Purple
+    4: '#BA68C8', // Critical: Darker Purple
+    5: '#8E24AA', // Catastrophic: Very Deep Purple
+  },
+  Backdoor: {
+    1: '#EFEBE9', // Low: Light Brown
+    2: '#D7CCC8', // Medium: Brown
+    3: '#BCAAA4', // High: Deep Brown
+    4: '#A1887F', // Critical: Darker Brown
+    5: '#795548', // Catastrophic: Very Deep Brown
+  },
+  Spyware: {
+    1: '#E0F2F1', // Low: Light Cyan
+    2: '#B2DFDB', // Medium: Cyan
+    3: '#80CBC4', // High: Deep Cyan
+    4: '#4DB6AC', // Critical: Darker Cyan
+    5: '#00897B', // Catastrophic: Very Deep Cyan
+  },
+  Adware: {
+    1: '#FFF9C4', // Low: Light Yellow
+    2: '#FFF59D', // Medium: Yellow
+    3: '#FFF176', // High: Deep Yellow
+    4: '#FFEE58', // Critical: Darker Yellow
+    5: '#FBC02D', // Catastrophic: Very Deep Yellow
+  },
+  Keylogger: {
+    1: '#E8F5E9', // Low: Light Green
+    2: '#C8E6C9', // Medium: Green
+    3: '#A5D6A7', // High: Deep Green
+    4: '#81C784', // Critical: Darker Green
+    5: '#2E7D32', // Catastrophic: Very Deep Green
+  },
+  'Exploit Kit': {
+    1: '#FCE4EC', // Low: Light Pink
+    2: '#F8BBD0', // Medium: Pink
+    3: '#F48FB1', // High: Deep Pink
+    4: '#F06292', // Critical: Darker Pink
+    5: '#AD1457', // Catastrophic: Very Deep Pink
+  },
+  'Supply Chain Attack': {
+    1: '#E3F2FD', // Low: Light Blue
+    2: '#BBDEFB', // Medium: Blue
+    3: '#90CAF9', // High: Deep Blue
+    4: '#64B5F6', // Critical: Darker Blue
+    5: '#0D47A1', // Catastrophic: Very Deep Blue
+  },
+  'Insider Threat': {
+    1: '#F1F8E9', // Low: Light Lime
+    2: '#DCEDC1', // Medium: Lime
+    3: '#C5E1A5', // High: Deep Lime
+    4: '#AED581', // Critical: Darker Lime
+    5: '#558B2F', // Catastrophic: Very Deep Lime
+  },
+  'Watering Hole': {
+    1: '#F3E5F5', // Low: Light Purple
+    2: '#E1BEE7', // Medium: Purple
+    3: '#CE93D8', // High: Deep Purple
+    4: '#BA68C8', // Critical: Darker Purple
+    5: '#6A1B9A', // Catastrophic: Very Deep Purple
+  },
+  'Drive-by Download': {
+    1: '#FFF3E0', // Low: Light Orange
+    2: '#FFE0B2', // Medium: Orange
+    3: '#FFCC80', // High: Deep Orange
+    4: '#FFB74D', // Critical: Darker Orange
+    5: '#E65100', // Catastrophic: Very Deep Orange
+  },
+  'Cookie Theft': {
+    1: '#FCE4EC', // Low: Light Pink
+    2: '#F8BBD0', // Medium: Pink
+    3: '#F48FB1', // High: Deep Pink
+    4: '#F06292', // Critical: Darker Pink
+    5: '#880E4F', // Catastrophic: Very Deep Pink
+  },
+  Typosquatting: {
+    1: '#E0F2F1', // Low: Light Teal
+    2: '#B2DFDB', // Medium: Teal
+    3: '#80CBC4', // High: Deep Teal
+    4: '#4DB6AC', // Critical: Darker Teal
+    5: '#004D40', // Catastrophic: Very Deep Teal
+  },
+  'Domain Hijacking': {
+    1: '#F3E5F5', // Low: Light Purple
+    2: '#E1BEE7', // Medium: Purple
+    3: '#CE93D8', // High: Deep Purple
+    4: '#BA68C8', // Critical: Darker Purple
+    5: '#512DA8', // Catastrophic: Very Deep Purple
+  },
+  'BGP Hijacking': {
+    1: '#E8F5E9', // Low: Light Green
+    2: '#C8E6C9', // Medium: Green
+    3: '#A5D6A7', // High: Deep Green
+    4: '#81C784', // Critical: Darker Green
+    5: '#1B5E20', // Catastrophic: Very Deep Green
+  },
+  'Sybil Attack': {
+    1: '#FFF9C4', // Low: Light Yellow
+    2: '#FFF59D', // Medium: Yellow
+    3: '#FFF176', // High: Deep Yellow
+    4: '#FFEE58', // Critical: Darker Yellow
+    5: '#F57F17', // Catastrophic: Very Deep Yellow
   },
 };
 
