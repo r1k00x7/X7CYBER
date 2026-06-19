@@ -27,8 +27,9 @@ export default function Globe({ autoRotate }: { autoRotate: boolean }) {
         <meshStandardMaterial
           map={texture}
           emissiveMap={texture}
-          emissive={new THREE.Color(0x335577)}
-          emissiveIntensity={0.55}
+          emissive={new THREE.Color(0x8fb4e0)}
+          emissiveIntensity={1.5}
+          color={new THREE.Color(0x6f87a8)}
           roughness={1}
           metalness={0}
         />

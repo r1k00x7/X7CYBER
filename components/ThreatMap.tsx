@@ -61,8 +61,9 @@ export default function ThreatMap() {
         gl={{ antialias: true, powerPreference: 'high-performance' }}
         dpr={[1, 2]}
       >
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[5, 3, 5]} intensity={1.2} />
+        <ambientLight intensity={1.6} />
+        <directionalLight position={[5, 3, 5]} intensity={2.0} />
+        <directionalLight position={[-5, -2, -3]} intensity={0.9} />
         <Suspense fallback={null}>
           <Starfield />
           <Globe autoRotate={false} />
