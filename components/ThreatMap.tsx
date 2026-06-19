@@ -10,7 +10,7 @@ import AttackBeam from './AttackBeam';
 import LeftPanel from './LeftPanel';
 import Counters from './Counters';
 import EventFeed from './EventFeed';
-import { useAttackSocket } from '@/lib/useAttackSocket';
+import { useAttackStream } from '@/lib/useAttackStream';
 import type { AttackEvent, AttackType, Interval } from '@/lib/types';
 import { ATTACK_TYPES } from '@/lib/types';
 
@@ -30,7 +30,7 @@ export default function ThreatMap() {
   const [sources, setSources] = useState<Set<string>>(new Set());
   const [targets, setTargets] = useState<Set<string>>(new Set());
 
-  const latest = useAttackSocket(paused);
+  const latest = useAttackStream(paused);
 
   useEffect(() => {
     if (!latest) return;
