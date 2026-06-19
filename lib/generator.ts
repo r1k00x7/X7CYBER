@@ -1,4 +1,5 @@
-import { COUNTRIES, ATTACK_TYPES } from './countries.data';
+import { COUNTRIES } from './countries.data';
+import { ATTACK_TYPES } from './types';
 import type { AttackEvent, AttackType } from './types';
 
 function pick<T>(arr: readonly T[]): T {
@@ -15,8 +16,15 @@ export function makeEvent(): AttackEvent {
     guard += 1;
   }
 
-  // Generate random threat level (1-5)
-  const threatLevel = Math.floor(Math.random() * 5) + 1;
+  // Generate random threat level (1-5) dengan distribusi lebih realistis
+  // 50% Low, 25% Medium, 15% High, 7% Critical, 3% Catastrophic
+  const rand = Math.random();
+  let threatLevel: 1 | 2 | 3 | 4 | 5;
+  if (rand < 0.5) threatLevel = 1;
+  else if (rand < 0.75) threatLevel = 2;
+  else if (rand < 0.9) threatLevel = 3;
+  else if (rand < 0.97) threatLevel = 4;
+  else threatLevel = 5;
 
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -30,6 +38,6 @@ export function makeEvent(): AttackEvent {
     targetLat: target.lat,
     targetLng: target.lng,
     attackType: pick(ATTACK_TYPES) as AttackType,
-    threatLevel: threatLevel as 1 | 2 | 3 | 4 | 5,
+    threatLevel: threatLevel,
   };
 }
