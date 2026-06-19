@@ -22,31 +22,41 @@ export default function Globe({ autoRotate }: { autoRotate: boolean }) {
 
   return (
     <group>
-      {/* Main directional light untuk terangin bumi */}
+      {/* Ambient light yang lebih terang untuk terangin keseluruhan */}
+      <ambientLight intensity={1.5} color={0xffffff} />
+
+      {/* Main directional light dari depan */}
       <directionalLight
-        position={[3, 2, 5]}
-        intensity={1.8}
+        position={[5, 3, 8]}
+        intensity={2.5}
         color={0xffffff}
         castShadow
       />
 
-      {/* Hemisphere light untuk ambient lighting */}
+      {/* Hemisphere light untuk ambient bumi */}
       <hemisphereLight
-        args={[0x4a9eff, 0x1a3a52, 1.2]}
+        args={[0x87ceeb, 0x1a1a2e, 1.8]}
       />
 
-      {/* Fill light untuk mengurangi shadow */}
+      {/* Fill light dari belakang untuk menghilangkan shadow */}
       <directionalLight
-        position={[-3, 1, -5]}
-        intensity={0.8}
-        color={0x7fb3d5}
+        position={[-4, 2, -6]}
+        intensity={1.2}
+        color={0xadd8e6}
       />
 
-      {/* Point light di depan untuk highlight */}
+      {/* Point light di atas untuk highlight */}
       <pointLight
-        position={[2, 1, 3]}
-        intensity={0.6}
+        position={[3, 3, 4]}
+        intensity={1.0}
         color={0xffffff}
+      />
+
+      {/* Additional side light untuk dimensi */}
+      <pointLight
+        position={[-3, -1, 3]}
+        intensity={0.7}
+        color={0x87ceeb}
       />
 
       <mesh ref={meshRef}>
@@ -54,15 +64,16 @@ export default function Globe({ autoRotate }: { autoRotate: boolean }) {
         <meshPhongMaterial
           map={texture}
           emissiveMap={texture}
-          emissive={new THREE.Color(0xa8c5e0)}
-          emissiveIntensity={2.0}
-          color={new THREE.Color(0x8fa8c5)}
-          shininess={32}
+          emissive={new THREE.Color(0xc0d9e8)}
+          emissiveIntensity={1.5}
+          color={new THREE.Color(0xb3c8d9)}
+          shininess={64}
           specularMap={texture}
-          specular={new THREE.Color(0x5a7a9a)}
+          specular={new THREE.Color(0x7a95b0)}
         />
       </mesh>
       <Atmosphere />
+      <AtmosphereGlow />
     </group>
   );
 }
@@ -70,13 +81,13 @@ export default function Globe({ autoRotate }: { autoRotate: boolean }) {
 // Soft glowing atmosphere rendered as a back-side shader shell.
 function Atmosphere() {
   return (
-    <mesh scale={1.18}>
+    <mesh scale={1.15}>
       <sphereGeometry args={[GLOBE_RADIUS, 64, 64]} />
       <shaderMaterial
         transparent
         side={THREE.BackSide}
         blending={THREE.AdditiveBlending}
-        uniforms={{ glowColor: { value: new THREE.Color(0x4ab5ff) } }}
+        uniforms={{ glowColor: { value: new THREE.Color(0x6db3d5) } }}
         vertexShader={`
           varying vec3 vNormal;
           void main() {
@@ -88,8 +99,38 @@ function Atmosphere() {
           varying vec3 vNormal;
           uniform vec3 glowColor;
           void main() {
-            float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.8);
-            gl_FragColor = vec4(glowColor, 1.2) * intensity;
+            float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.5);
+            gl_FragColor = vec4(glowColor, 1.0) * intensity;
+          }
+        `}
+      />
+    </mesh>
+  );
+}
+
+// Additional outer glow untuk efek yang lebih smooth
+function AtmosphereGlow() {
+  return (
+    <mesh scale={1.25}>
+      <sphereGeometry args={[GLOBE_RADIUS, 64, 64]} />
+      <shaderMaterial
+        transparent
+        side={THREE.BackSide}
+        blending={THREE.AdditiveBlending}
+        uniforms={{ glowColor: { value: new THREE.Color(0x4a9fd8) } }}
+        vertexShader={`
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `}
+        fragmentShader={`
+          varying vec3 vNormal;
+          uniform vec3 glowColor;
+          void main() {
+            float intensity = pow(0.5 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+            gl_FragColor = vec4(glowColor, 0.8) * intensity;
           }
         `}
       />
