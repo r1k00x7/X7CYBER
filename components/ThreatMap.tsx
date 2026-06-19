@@ -8,6 +8,9 @@ import Globe from './Globe';
 import Starfield from './Starfield';
 import AttackBeam from './AttackBeam';
 import EventFeed from './EventFeed';
+import StatsDashboard from './StatsDashboard';
+import TopBar from './TopBar';
+import ThreatMetrics from './ThreatMetrics';
 import { useAttackStream } from '@/lib/useAttackStream';
 import type { AttackEvent } from '@/lib/types';
 
@@ -17,8 +20,10 @@ const MAX_BEAMS = 40;
 export default function ThreatMap() {
   const [beams, setBeams] = useState<AttackEvent[]>([]);
   const [feed, setFeed] = useState<AttackEvent[]>([]);
+  const [paused, setPaused] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(false);
 
-  const latest = useAttackStream(false);
+  const latest = useAttackStream(paused);
 
   useEffect(() => {
     if (!latest) return;
@@ -34,13 +39,14 @@ export default function ThreatMap() {
   const beamEls = useMemo(
     () =>
       beams.map((e) => (
-        <AttackBeam key={e.id} event={e} paused={false} onDone={removeBeam} />
+        <AttackBeam key={e.id} event={e} paused={paused} onDone={removeBeam} />
       )),
-    [beams, removeBeam]
+    [beams, removeBeam, paused]
   );
 
   return (
     <div className="relative h-full w-full">
+      {/* Canvas dengan Globe dan Attacks */}
       <Canvas
         camera={{ position: [0, 0, 6], fov: 45 }}
         gl={{ antialias: true, powerPreference: 'high-performance' }}
@@ -51,7 +57,7 @@ export default function ThreatMap() {
         <directionalLight position={[-5, -2, -3]} intensity={0.9} />
         <Suspense fallback={null}>
           <Starfield />
-          <Globe autoRotate={false} />
+          <Globe autoRotate={autoRotate} />
           {beamEls}
         </Suspense>
         <OrbitControls
@@ -61,12 +67,28 @@ export default function ThreatMap() {
           maxDistance={12}
           rotateSpeed={0.6}
           zoomSpeed={0.8}
-          autoRotate={false}
+          autoRotate={autoRotate}
         />
       </Canvas>
 
+      {/* UI Overlays */}
       <div className="pointer-events-none absolute inset-0">
+        {/* Top Bar dengan kontrol */}
+        <TopBar 
+          paused={paused} 
+          onPauseToggle={() => setPaused(!paused)}
+          autoRotate={autoRotate}
+          onAutoRotateToggle={() => setAutoRotate(!autoRotate)}
+        />
+
+        {/* Event Feed */}
         <EventFeed events={feed} />
+
+        {/* Statistics Dashboard */}
+        <StatsDashboard events={feed} />
+
+        {/* Threat Metrics Side Panel */}
+        <ThreatMetrics events={feed} />
       </div>
     </div>
   );
