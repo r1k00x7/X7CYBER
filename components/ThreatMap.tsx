@@ -7,21 +7,16 @@ import { OrbitControls } from '@react-three/drei';
 import Globe from './Globe';
 import Starfield from './Starfield';
 import AttackBeam from './AttackBeam';
-import LeftPanel from './LeftPanel';
 import Counters from './Counters';
 import EventFeed from './EventFeed';
 import { useAttackStream } from '@/lib/useAttackStream';
-import type { AttackEvent, AttackType } from '@/lib/types';
-import { ATTACK_TYPES } from '@/lib/types';
+import type { AttackEvent } from '@/lib/types';
 
 const MAX_FEED = 18;
 const MAX_BEAMS = 40;
 
 export default function ThreatMap() {
   const [paused, setPaused] = useState(false);
-  const [active, setActive] = useState<Set<AttackType>>(
-    () => new Set(ATTACK_TYPES)
-  );
 
   const [beams, setBeams] = useState<AttackEvent[]>([]);
   const [feed, setFeed] = useState<AttackEvent[]>([]);
@@ -33,7 +28,6 @@ export default function ThreatMap() {
 
   useEffect(() => {
     if (!latest) return;
-    if (!active.has(latest.attackType)) return;
 
     setBeams((prev) => [...prev.slice(-(MAX_BEAMS - 1)), latest]);
     setFeed((prev) => [latest, ...prev].slice(0, MAX_FEED));
@@ -48,19 +42,10 @@ export default function ThreatMap() {
       next.add(latest.targetCode);
       return next;
     });
-  }, [latest, active]);
+  }, [latest]);
 
   const removeBeam = useCallback((id: string) => {
     setBeams((prev) => prev.filter((b) => b.id !== id));
-  }, []);
-
-  const toggleType = useCallback((t: AttackType) => {
-    setActive((prev) => {
-      const next = new Set(prev);
-      if (next.has(t)) next.delete(t);
-      else next.add(t);
-      return next;
-    });
   }, []);
 
   const beamEls = useMemo(
@@ -97,12 +82,12 @@ export default function ThreatMap() {
       </Canvas>
 
       <div className="pointer-events-none absolute inset-0">
-        <LeftPanel
-          active={active}
-          onToggle={toggleType}
-          paused={paused}
-          onPauseToggle={() => setPaused((p) => !p)}
-        />
+        <button
+          onClick={() => setPaused((p) => !p)}
+          className="pointer-events-auto absolute right-4 top-4 z-10 rounded-md border border-threat-border bg-threat-panel px-4 py-1.5 text-xs text-threat-text backdrop-blur-md transition hover:bg-white/5"
+        >
+          {paused ? 'Resume' : 'Pause'}
+        </button>
         <EventFeed events={feed} />
         <Counters
           totalEvents={total}
