@@ -13,6 +13,14 @@ const TARGET_COLOR = new THREE.Color('#3aa0ff');
 const HEAD_COLOR = new THREE.Color('#ffffff');
 const DURATION = 1.9; // seconds for beam to travel the arc
 
+const TYPE_COLOR: Record<string, string> = {
+  'Web Attackers': '#ff8a3b',
+  'DDoS Attackers': '#ff3b4e',
+  Intruders: '#d65bff',
+  Scanners: '#3aa0ff',
+  Anonymizers: '#39d98a',
+};
+
 interface Props {
   event: AttackEvent;
   paused: boolean;
@@ -120,10 +128,18 @@ export default function AttackBeam({ event, paused, onDone }: Props) {
         </div>
       </Html>
 
-      {/* target country label */}
+      {/* target country + attack type label */}
       <Html position={target} center distanceFactor={6} zIndexRange={[10, 0]}>
-        <div className="whitespace-nowrap rounded bg-black/55 px-1.5 py-0.5 text-[10px] font-medium leading-none text-[#8fc7ff] backdrop-blur-sm">
-          {event.targetCountry}
+        <div className="flex flex-col items-center gap-0.5 whitespace-nowrap rounded bg-black/55 px-1.5 py-0.5 leading-none backdrop-blur-sm">
+          <span className="text-[10px] font-medium text-[#8fc7ff]">
+            {event.targetCountry}
+          </span>
+          <span
+            className="text-[9px] font-semibold"
+            style={{ color: TYPE_COLOR[event.attackType] ?? '#c7d3e6' }}
+          >
+            {event.attackType}
+          </span>
         </div>
       </Html>
 
