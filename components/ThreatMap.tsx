@@ -16,15 +16,13 @@ const MAX_FEED = 18;
 const MAX_BEAMS = 40;
 
 export default function ThreatMap() {
-  const [paused, setPaused] = useState(false);
-
   const [beams, setBeams] = useState<AttackEvent[]>([]);
   const [feed, setFeed] = useState<AttackEvent[]>([]);
   const [total, setTotal] = useState(0);
   const [sources, setSources] = useState<Set<string>>(new Set());
   const [targets, setTargets] = useState<Set<string>>(new Set());
 
-  const latest = useAttackStream(paused);
+  const latest = useAttackStream(false);
 
   useEffect(() => {
     if (!latest) return;
@@ -51,9 +49,9 @@ export default function ThreatMap() {
   const beamEls = useMemo(
     () =>
       beams.map((e) => (
-        <AttackBeam key={e.id} event={e} paused={paused} onDone={removeBeam} />
+        <AttackBeam key={e.id} event={e} paused={false} onDone={removeBeam} />
       )),
-    [beams, paused, removeBeam]
+    [beams, removeBeam]
   );
 
   return (
@@ -67,7 +65,7 @@ export default function ThreatMap() {
         <directionalLight position={[5, 3, 5]} intensity={1.2} />
         <Suspense fallback={null}>
           <Starfield />
-          <Globe autoRotate={!paused} />
+          <Globe autoRotate={false} />
           {beamEls}
         </Suspense>
         <OrbitControls
@@ -82,12 +80,6 @@ export default function ThreatMap() {
       </Canvas>
 
       <div className="pointer-events-none absolute inset-0">
-        <button
-          onClick={() => setPaused((p) => !p)}
-          className="pointer-events-auto absolute right-4 top-4 z-10 rounded-md border border-threat-border bg-threat-panel px-4 py-1.5 text-xs text-threat-text backdrop-blur-md transition hover:bg-white/5"
-        >
-          {paused ? 'Resume' : 'Pause'}
-        </button>
         <EventFeed events={feed} />
         <Counters
           totalEvents={total}
